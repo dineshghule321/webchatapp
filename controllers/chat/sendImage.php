@@ -20,31 +20,31 @@ if ($_SESSION["userEmail"] != "") {
         $user_id = $_SESSION['userId'];
 
 
-                $touserId = cleanQuery($_POST["touserId"]);
-                $description = cleanQuery($_POST["description"]);
+        $touserId = cleanQuery($_POST["touserId"]);
+        $description = cleanQuery($_POST["description"]);
 
-                if ($_FILES["file_path"]["name"]!="") {
-                    $file_ext = strtolower(end(explode('.', $_FILES["file_path"]['name'])));
-                    $file_name = strtotime(date("d-m-y h:i:s a")) . "." . $file_ext;
-                }else{
-                    $returnArr["errCode"] = "1";
-                    $returnArr["errMsg"] = "Please select image.";
-                    echo json_encode($returnArr, true);
-                    exit;
-                }
+        if ($_FILES["file_path"]["name"] != "") {
+            $file_ext = strtolower(end(explode('.', $_FILES["file_path"]['name'])));
+            $file_name = strtotime(date("d-m-y h:i:s a")) . "." . $file_ext;
+        } else {
+            $returnArr["errCode"] = "1";
+            $returnArr["errMsg"] = "Please select image.";
+            echo json_encode($returnArr, true);
+            exit;
+        }
 
-                $chat->validateImages("file_path");
+        $chat->validateImages("file_path");
 
-                $result = $chat->insertSharedFile($user_id, $touserId,$file_name,$description);
+        $result = $chat->insertSharedFile($user_id, $touserId, $file_name, $description);
 
-                if (noError($result)) {
-                    $returnArr["errCode"] = "-1";
-                    $returnArr["errMsg"] = "Image Shared Successfully.";
-                } else {
-                    $returnArr["errCode"] = "1";
-                    $returnArr["errMsg"] = "Oop's there is error while shearing Image, please try again.";
-                }
-                echo json_encode($returnArr, true);
+        if (noError($result)) {
+            $returnArr["errCode"] = "-1";
+            $returnArr["errMsg"] = "Image Shared Successfully.";
+        } else {
+            $returnArr["errCode"] = "1";
+            $returnArr["errMsg"] = "Oop's there is error while shearing Image, please try again.";
+        }
+        echo json_encode($returnArr, true);
 
     } else {
         $returnArr["errCode"] = "1";

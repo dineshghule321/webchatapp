@@ -6,9 +6,9 @@ require_once('../../config/config.php');
 require_once("../../models/user/User.php");
 
 global $inactive;
-$email=$_SESSION['userEmail'];
+$email = $_SESSION['userEmail'];
 
-$UserObject=new User();
+$UserObject = new User();
 
 if (isset($_SESSION["timeout"])) {
     $sessionTTL = time() - $_SESSION["timeout"];
@@ -16,19 +16,16 @@ if (isset($_SESSION["timeout"])) {
 
         session_destroy();
 
-        if($email!="")
-        {
+        if ($email != "") {
             $UserObject->updateLogoutTime($email);
         }
-        $data="-1";
+        $data = "-1";
 
-    }else
-    {
-        if($email!="")
-        {
+    } else {
+        if ($email != "") {
             $UserObject->updateLastActivityTime($_SESSION["userEmail"]);
         }
-        $data= "Updated Time";
+        $data = "Updated Time";
     }
 }
 

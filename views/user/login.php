@@ -35,17 +35,15 @@ require_once "../../helpers/session.php"; //check session
 <script>
 
 
-    $( document ).ready(function() {
+    $(document).ready(function () {
         $('#customError').html('');
-        var ecode="<?= isset($_SESSION['loginError']['errCode'])?$_SESSION['loginError']['errCode']:''; ?>";
-        var emsg="<?= isset($_SESSION['loginError']['errMsg'])?$_SESSION['loginError']['errMsg']:''; ?>";
+        var ecode = "<?= isset($_SESSION['loginError']['errCode']) ? $_SESSION['loginError']['errCode'] : ''; ?>";
+        var emsg = "<?= isset($_SESSION['loginError']['errMsg']) ? $_SESSION['loginError']['errMsg'] : ''; ?>";
 
-        if(ecode!="" && emsg!="")
-        {
-            if(ecode=="-1")
-            {
+        if (ecode != "" && emsg != "") {
+            if (ecode == "-1") {
                 $('#customError').html(bsAlert('success', emsg));
-            }else {
+            } else {
                 $('#customError').html(bsAlert('danger', emsg));
             }
         }

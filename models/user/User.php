@@ -10,18 +10,18 @@ class User
     }
 
 
-    function addUser($email,$password,$status)
+    function addUser($email, $password, $status)
     {
-        $authToken=generateRandomString();
+        $authToken = generateRandomString();
         $password = sha1Md5DualEncryption($password);
         $adminArr = array(
             "email_address" => $email,
             "passwordHash" => $password,
             "auth_token" => $authToken,
-            "status"=>$status,
-            "creation_date"=>NOWTime()
+            "status" => $status,
+            "creation_date" => NOWTime()
         );
-                return $this->connection->insert("users", $adminArr);
+        return $this->connection->insert("users", $adminArr);
 
     }
 
@@ -50,9 +50,9 @@ class User
      * @param $hash
      * @return array
      */
-    function validateLogin($email, $hash,$status)
+    function validateLogin($email, $hash, $status)
     {
-        return $this->connection->select("users", array(), array("email_address" => "{$email}", "passwordHash" => "{$hash}","status"=>$status));
+        return $this->connection->select("users", array(), array("email_address" => "{$email}", "passwordHash" => "{$hash}", "status" => $status));
     }
 
     /**
@@ -67,15 +67,17 @@ class User
         return $this->connection->select("users", array(), array("email_address" => "{$email}", "status" => 1));
     }
 
-    function isContactUSerExists($email,$userid)
+    function isContactUSerExists($email, $userid)
     {
         return $this->connection->select("contacts", array(), array("email_address" => "{$email}", "user_id" => $userid));
     }
-    function getLastMsg($from,$userid)
+
+    function getLastMsg($from, $userid)
     {
-        $query="SELECT msg,time FROM message where from_user_id IN ($from) AND to_user_id IN ($userid) ORDER BY id DESC LIMIT 1";
+        $query = "SELECT msg,time FROM message where from_user_id IN ($from) AND to_user_id IN ($userid) ORDER BY id DESC LIMIT 1";
         return $this->connection->query($query);
     }
+
     /**
      * ----------------------------------------------------------------------------------------
      *change user password
@@ -171,26 +173,23 @@ class User
         return $this->connection->select("users", array(), array("email_address" => "{$email}", "status" => 1));
     }
 
+    function getContactDetails($id)
+    {
+        $result = $this->getUserDataByID($id);
+        if (noError($result)) {
+            $email = $result['data']['result']['0']['email_address'];
+            return $this->connection->select("contacts", array(), array("email_address" => "{$email}"));
+        }
+    }
+
     function getUserDataByID($id)
     {
         return $this->connection->select("users", array(), array("user_id" => "{$id}", "status" => 1));
     }
 
-
-    function getContactDetails($id)
-    {
-        $result=$this->getUserDataByID($id);
-        if(noError($result))
-        {
-            $email=$result['data']['result']['0']['email_address'];
-            return $this->connection->select("contacts", array(), array("email_address" => "{$email}"));
-        }
-    }
-
-
     function lastSeen($time)
     {
-        if($time!="") {
+        if ($time != "") {
             $seconds_ago = (time() - strtotime($time));
 
             if ($seconds_ago >= 31536000) {
@@ -207,15 +206,16 @@ class User
                 $seen = "Last Seen less than a minute ago";
             }
             return $seen;
-        }else{
-            $seen="";
+        } else {
+            $seen = "";
             return $seen;
         }
     }
 
-    function time_ago($datetime, $full = false) {
+    function time_ago($datetime, $full = false)
+    {
 
-        if($datetime!="") {
+        if ($datetime != "") {
             $now = new DateTime;
             $ago = new DateTime($datetime);
             $diff = $now->diff($ago);
@@ -242,11 +242,96 @@ class User
 
             if (!$full) $string = array_slice($string, 0, 1);
             return $string ? implode(', ', $string) . ' ago' : 'just now';
-        }else{
-            $string="";
+        } else {
+            $string = "";
             return $string;
 
         }
     }
 
+
+    function validateImages($fileId)
+    {
+        global $docRoot;
+        if ($_FILES["{$fileId}"]["name"] != "") {
+            $file_tmp_name = $_FILES["tmp_name"];
+            $file_Size = $_FILES["size"];
+            $file_name = $_FILES["name"];
+
+
+            $file_ext = strtolower(end(explode('.', $_FILES["{$fileId}"]['name'])));
+            $file_name = strtotime(date("d-m-y h:i:s a")) . "." . $file_ext;
+
+            $target_dir = $docRoot . "assets/sysImg/profile/";
+
+            $target_file = $target_dir . basename($_FILES["{$fileId}"]["name"]);
+
+
+            $uploadOk = 1;
+            $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+
+            $target_file = $target_dir . $file_name;
+            // Check if image file is a actual image or fake image
+            $check = getimagesize($_FILES["{$fileId}"]["tmp_name"]);
+            if ($check !== false) {
+                $uploadOk = 1;
+            } else {
+                $msg = "File is not an image.Please upload valid Image file.";
+                $uploadOk = 0;
+                $returnArr["errCode"] = "1";
+                $returnArr["errMsg"] = $msg;
+                echo json_encode($returnArr, true);
+                exit;
+            }
+
+            // Check if file already exists
+            if (file_exists($target_file)) {
+                $msg = "Sorry, file already exists.";
+                $uploadOk = 0;
+                $returnArr["errCode"] = "1";
+                $returnArr["errMsg"] = $msg;
+                echo json_encode($returnArr, true);
+                exit;
+            }
+
+            // Check file size
+            if ($_FILES["{$fileId}"]["size"] > 500000) {
+                $msg = "Sorry, your file is too large.";
+                $uploadOk = 0;
+                $returnArr["errCode"] = "1";
+                $returnArr["errMsg"] = $msg;
+                echo json_encode($returnArr, true);
+                exit;
+            }
+
+            // Allow certain file formats
+            if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+                && $imageFileType != "gif"
+            ) {
+                $msg = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+                $uploadOk = 0;
+                $returnArr["errCode"] = "1";
+                $returnArr["errMsg"] = $msg;
+                echo json_encode($returnArr, true);
+                exit;
+            }
+        }
+
+        if ($_FILES["{$fileId}"]["name"] != "") {
+            if (move_uploaded_file($_FILES["{$fileId}"]["tmp_name"], $target_file)) {
+            } else {
+                $msg = "Sorry, there was an error uploading your file.Please try again";
+                $returnArr["errCode"] = "1";
+                $returnArr["errMsg"] = $msg;
+                echo json_encode($returnArr, true);
+                exit;
+            }
+        }
+    }
+
+    function updateProfilePic($file_name, $email)
+    {
+        return $this->connection->update("users", array("profile_pic_path" => $file_name), array("email_address" => "{$email}"));
+
+    }
 }

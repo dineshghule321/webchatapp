@@ -9,20 +9,20 @@ require_once("../../models/chat/chat.php");
 
 
 $returnArr = array();
-if (!empty($_SESSION) && $_SESSION['userLogin']=="1") {
+if (!empty($_SESSION) && $_SESSION['userLogin'] == "1") {
     if (!empty($_POST)) {
 
-        $UserObject=new User();
-        $chat=new chat();
+        $UserObject = new User();
+        $chat = new chat();
 
-        $postData=array_map('cleanQuery',$_POST);
+        $postData = array_map('cleanQuery', $_POST);
 
-        $email=$_SESSION['userEmail'];
-        $from_user_id=$_SESSION['userId'];
-        $to_user_id=$postData['touserId'];
-        $toUserDetails=$UserObject->getContactDetails($to_user_id)['data']['result']['0'];
-        $fullName=$toUserDetails['first_name']." ".$toUserDetails['last_name'];
-        $touserImagePath=$toUserDetails['photo_path'];
+        $email = $_SESSION['userEmail'];
+        $from_user_id = $_SESSION['userId'];
+        $to_user_id = $postData['touserId'];
+        $toUserDetails = $UserObject->getContactDetails($to_user_id)['data']['result']['0'];
+        $fullName = $toUserDetails['first_name'] . " " . $toUserDetails['last_name'];
+        $touserImagePath = $toUserDetails['photo_path'];
 
         $operation = $postData['operation'];
         switch ($operation) {
@@ -30,7 +30,7 @@ if (!empty($_SESSION) && $_SESSION['userLogin']=="1") {
 
                 $message = $postData['comments'];
                 if ($message != "") {
-                    $result = $chat->insertMsg($from_user_id,$to_user_id, $message);
+                    $result = $chat->insertMsg($from_user_id, $to_user_id, $message);
                     if (noError($result)) {
                         $returnArr["errCode"] = $result["errCode"];
                         $returnArr['errMsg'] = "Message content Updated Successfully.";
@@ -48,21 +48,20 @@ if (!empty($_SESSION) && $_SESSION['userLogin']=="1") {
 
             case "checkNewMessages":
                 $lastMsgID = cleanQuery(base64_decode($_POST['lastMsgID']));
-                if($lastMsgID=="")
-                {
-                    $lastMsgID="0";
+                if ($lastMsgID == "") {
+                    $lastMsgID = "0";
                 }
                 $userType = $_POST['userType'];
-                $result = $chat->getMsgById($from_user_id,$to_user_id,$lastMsgID);
-                $output=$result["data"]['result'];
+                $result = $chat->getMsgById($from_user_id, $to_user_id, $lastMsgID);
+                $output = $result["data"]['result'];
 
                 $chat->metaOutput($output, $from_user_id, $touserImagePath, $fullName);
                 break;
 
             case "initialLoad":
                 $userType = $_POST['userType'];
-                $result = $chat->getAllMsg($from_user_id,$to_user_id);
-                $output=$result["data"]['result'];
+                $result = $chat->getAllMsg($from_user_id, $to_user_id);
+                $output = $result["data"]['result'];
 
                 $chat->metaOutput($output, $from_user_id, $touserImagePath, $fullName);
                 break;
@@ -72,7 +71,7 @@ if (!empty($_SESSION) && $_SESSION['userLogin']=="1") {
         $returnArr['errMsg'] = "Unauthorised.";
         echo json_encode($returnArr);
     }
-}else{
+} else {
     $returnArr['errCode'] = 403;
     $returnArr['errMsg'] = "Unauthorised.";
     echo json_encode($returnArr);

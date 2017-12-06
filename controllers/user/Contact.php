@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dinesh
- * Date: 16/9/17
- * Time: 10:26 AM
- */
 
 session_start();
 require_once("../../config/config.php");
@@ -39,34 +33,34 @@ if ($_SESSION["userEmail"] != "") {
                 $lname = cleanQuery($_POST["last_name"]);
                 $moblie_number = cleanQuery($_POST["moblie_number"]);
 
-                $exist=$User->isUSerExists($email)['data']['result'];
-                if (count($exist)<=0) {
+                $exist = $User->isUSerExists($email)['data']['result'];
+                if (count($exist) <= 0) {
                     $returnArr["errCode"] = "1";
                     $returnArr["errMsg"] = "This contact is not registered with us.";
                     echo json_encode($returnArr, true);
                     exit;
                 }
 
-                $exist=$User->isContactUSerExists($email,$user_id)['data']['result']['0']['email_address'];
-                if ($exist==$email) {
+                $exist = $User->isContactUSerExists($email, $user_id)['data']['result']['0']['email_address'];
+                if ($exist == $email) {
                     $returnArr["errCode"] = "1";
                     $returnArr["errMsg"] = "This contact already added in your list.";
                     echo json_encode($returnArr, true);
                     exit;
                 }
 
-                if ($_FILES["photo_path"]["name"]!="") {
+                if ($_FILES["photo_path"]["name"] != "") {
                     $file_ext = strtolower(end(explode('.', $_FILES["photo_path"]['name'])));
                     $file_name = strtotime(date("d-m-y h:i:s a")) . "." . $file_ext;
-                }else{
-                    $file_name="";
+                } else {
+                    $file_name = "";
                     $file_name = strtotime(date("d-m-y h:i:s a")) . ".png";
-                    $srcfile="{$docRoot}assets/sysImg/user-dummy-pic.png";
-                    $dstfile="{$docRoot}assets/images/{$file_name}";
+                    $srcfile = "{$docRoot}assets/sysImg/user-dummy-pic.png";
+                    $dstfile = "{$docRoot}assets/images/{$file_name}";
                     copy($srcfile, $dstfile);
                 }
 
-                $Contact->commonValidations($email, $fname, $lname, $moblie_number,"photo_path");
+                $Contact->commonValidations($email, $fname, $lname, $moblie_number, "photo_path");
 
                 $result = $Contact->submitContactData($email, $fname, $lname, $moblie_number, $file_name, $user_id);
 
@@ -101,24 +95,24 @@ if ($_SESSION["userEmail"] != "") {
                 $lname = cleanQuery($_POST["edit_last_name"]);
                 $moblie_number = cleanQuery($_POST["edit_moblie_number"]);
 
-             /*   $exist=$User->isContactUSerExists($email,$user_id)['data']['result']['0']['email_address'];
-                if ($exist==$email) {
-                    $returnArr["errCode"] = "1";
-                    $returnArr["errMsg"] = "This contact already added in your list.";
-                    echo json_encode($returnArr, true);
-                    exit;
-                }*/
+                /*   $exist=$User->isContactUSerExists($email,$user_id)['data']['result']['0']['email_address'];
+                   if ($exist==$email) {
+                       $returnArr["errCode"] = "1";
+                       $returnArr["errMsg"] = "This contact already added in your list.";
+                       echo json_encode($returnArr, true);
+                       exit;
+                   }*/
 
-                if ($_FILES["edit_photo_path"]["name"]!="") {
+                if ($_FILES["edit_photo_path"]["name"] != "") {
                     $file_ext = strtolower(end(explode('.', $_FILES["edit_photo_path"]['name'])));
                     $file_name = strtotime(date("d-m-y h:i:s a")) . "." . $file_ext;
-                }else{
-                    $file_name="";
+                } else {
+                    $file_name = "";
                 }
 
-                $Contact->commonValidations($email, $fname, $lname, $moblie_number,"edit_photo_path");
+                $Contact->commonValidations($email, $fname, $lname, $moblie_number, "edit_photo_path");
 
-                $result = $Contact->updateContact($contact_id,$fname,$lname,$moblie_number,$file_name);
+                $result = $Contact->updateContact($contact_id, $fname, $lname, $moblie_number, $file_name);
                 if (noError($result)) {
                     $returnArr["errCode"] = "-1";
                     $returnArr["errMsg"] = "Contact Data Updated Successfully.";
@@ -131,19 +125,20 @@ if ($_SESSION["userEmail"] != "") {
 
             case "get_all_contact":
                 $name = cleanQuery($_POST["user_name"]);
-                $result = $Contact->getAllContact($user_id,$name);
+                $result = $Contact->getAllContact($user_id, $name);
                 if (noError($result)) {
-                    $result=$result['data']['result'];
+                    $result = $result['data']['result'];
 
-                    if(count($result)>0) {
+                    if (count($result) > 0) {
                         foreach ($result as $val) {
-                            $result=$User->getUserId($val['email_address'])['data']['result']['0'];
-                            $toUserID=$result['user_id'];
-                            $data=$User->getLastMsg($user_id,$toUserID)['data']['result']['0'];
-                            $msg=$data['msg'];
-                            $timeago=$User->time_ago($data['time'], $full = false);
+                            $result = $User->getUserId($val['email_address'])['data']['result']['0'];
+                            $toUserID = $result['user_id'];
+                            $data = $User->getLastMsg($user_id, $toUserID)['data']['result']['0'];
+                            $msg = $data['msg'];
+                            $timeago = $User->time_ago($data['time'], $full = false);
                             ?>
-                            <div class="cardCheck point card p-1 f-sz-10 m-t-1" onclick="loadChat('<?= $user_id; ?>','<?= $toUserID; ?>')">
+                            <div class="cardCheck point card p-1 f-sz-10 m-t-1"
+                                 onclick="loadChat('<?= $user_id; ?>','<?= $toUserID; ?>')">
                                 <div class="row m-b-0p">
                                     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center">
                                         <img class="circle imageDim"
@@ -165,20 +160,20 @@ if ($_SESSION["userEmail"] != "") {
                                     </div>
                                     <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 p-l-0">
                                         <div class="short_msg gray-text">
-                                           <?= $msg; ?>
+                                            <?= $msg; ?>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <script>
-                                $(".cardCheck").click(function() {
+                                $(".cardCheck").click(function () {
                                     $(".cardCheck").removeClass('card--active');
                                     $(this).addClass('card--active');
                                 });
                             </script>
                             <?php
                         }
-                    }else{
+                    } else {
                         ?>
                         <div class="card p-1 f-sz-10 m-t-1">
                             Your searched contact not found OR You have not added any contact.
@@ -190,7 +185,7 @@ if ($_SESSION["userEmail"] != "") {
                     <div class="card p-1 f-sz-10 m-t-1">
                         Something went wrong please try again.
                     </div>
-                <?php
+                    <?php
                 }
                 break;
         }

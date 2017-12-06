@@ -14,7 +14,6 @@ function set_error_stack($error_code, $message = "", $data = [])
 {
 
     $error_code_array = array(
-        -2 => "nonce error",
         -1 => "",
         1 => "Error in creating database connection.",
         2 => "Error in query execution."

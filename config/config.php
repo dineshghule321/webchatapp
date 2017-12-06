@@ -4,17 +4,16 @@ $rootUrl = "http://localhost/webchatapp/"; //Server ROOT URL
 
 $docRoot = $_SERVER['DOCUMENT_ROOT'] . "/webchatapp/"; //Document ROOT of server
 
-if($_SERVER['DOCUMENT_ROOT']=="")
-{
-   $docRoot = dirname(__DIR__)."/";
+if ($_SERVER['DOCUMENT_ROOT'] == "") {
+    $docRoot = dirname(__DIR__) . "/";
 }
 
-$inactive                   = 1200000;
-$checkSession               = 30000;
-$chatRefreshTime            = 10000;
-$Timezone                   = "Asia/Kolkata";
+$inactive = 1200000;
+$checkSession = 30000;
+$chatRefreshTime = 10000;
+$Timezone = "Asia/Kolkata";
 
-$mode  = "development"; // System Mode
+$mode = "development"; // System Mode
 
 $rootUrlImages = "{$rootUrl}assets/images/";
 $rootView = "{$rootUrl}views/";
@@ -22,8 +21,7 @@ $rootView = "{$rootUrl}views/";
 if ($mode != "production") {
     ini_set('display_errors', 1);
     error_reporting(E_ALL);
-}else
-{
+} else {
     ini_set('display_errors', 0);
     error_reporting(0);
 }
@@ -37,6 +35,7 @@ function loadSystem($docRoot)
     require_once("{$docRoot}helpers/cryptoHelper.php");
 
 }
+
 loadSystem($docRoot);
 
 ?>

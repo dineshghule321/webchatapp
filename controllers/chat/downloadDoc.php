@@ -1,7 +1,7 @@
 <?php
 
 $file = urldecode($_GET['file']);
-$doc="../../assets/sharedDoc/{$file}";
+$doc = "../../assets/sharedDoc/{$file}";
 header('Content-Description: File Transfer');
 header('Content-Type: application/octet-stream');
 header("Content-Disposition: attachment; filename={$file}");

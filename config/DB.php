@@ -7,14 +7,21 @@
 class DB
 {
     /**
+     * @var string
+     */
+    public $connection = "";
+    /**
+     * @var string
+     */
+    public $errorMap = "";
+    /**
      * DB Host Array
      * @var array
      */
-    private $dbHost=array(
+    private $dbHost = array(
         "db_host_primary" => "localhost",
         "db_host_secondary" => "localhost"
     );
-
     /**
      * System Database Array
      * @var array
@@ -26,15 +33,21 @@ class DB
         "db_port" => "3306"
     );
 
+    /**
+     * constructor initialise database connection
+     * DB constructor.
+     * @param string $database
+     * @param string $is_persiatant
+     */
+    function __construct($database = "NULL", $is_persiatant = "NULL")
+    {
+        ini_set('display_errors', 0);
+        error_reporting(0);
 
-    /**
-     * @var string
-     */
-    public $connection = "";
-    /**
-     * @var string
-     */
-    public $errorMap = "";
+        $credential = $this->getDatabaseCredential($database);
+        $conn = $this->getDBConnection($credential, $is_persiatant);
+        $this->connection = $conn["data"];
+    }
 
     /**
      * this function fetch database credential for particular database by name of case
@@ -62,39 +75,6 @@ class DB
     }
 
     /**
-     * constructor initialise database connection
-     * DB constructor.
-     * @param string $database
-     * @param string $is_persiatant
-     */
-    function __construct($database = "NULL", $is_persiatant = "NULL")
-    {
-        ini_set('display_errors', 0);
-        error_reporting(0);
-
-        $credential = $this->getDatabaseCredential($database);
-        $conn = $this->getDBConnection($credential, $is_persiatant);
-        $this->connection = $conn["data"];
-    }
-
-    /**
-     * this magic method don't allow object cloning
-     * @return bool
-     */
-    private function __clone()
-    {
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function __wakeup()
-    {
-        return false;
-    }
-
-    /**
      * this function connect to database using pdo and return connection object
      * @param $credential
      * @param $is_persiatant
@@ -118,74 +98,25 @@ class DB
         try {
             $db = new PDO("mysql:host={$host};port={$port};dbname={$database}", $user, $password, $persiatant);
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            return set_error_stack(-1,"",$db);
+            return set_error_stack(-1, "", $db);
         } catch (PDOException $e) {
             try {
                 $db = new PDO("mysql:host={$host_secondary};port={$port};dbname={$database}", $user, $password, $persiatant);
                 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                return set_error_stack(-1,"",$db);
+                return set_error_stack(-1, "", $db);
             } catch (PDOException $e) {
-                return set_error_stack(1,'Connection failed: ' . $e->getMessage());
+                return set_error_stack(1, 'Connection failed: ' . $e->getMessage());
             }
         }
 
     }
 
     /**
-     * function used to run query on database object
-     * @param $query
-     * @param array $parameters
-     * @return array
+     * @return bool
      */
-    public function query($query, array $parameters = array())
+    public function __wakeup()
     {
-        $return_array = array();
-        $result_array = array();
-        $words = str_word_count($query, 1);
-        try {
-            $stmt = $this->connection->prepare($query);
-
-            if (!empty($parameters)) {
-                $result = $stmt->execute($parameters);
-            } else {
-                $result = $stmt->execute($parameters);
-            }
-        }catch(PDOException $e)
-        {
-            echo $errorMsg = 'Error on line '.$e->getLine().' in '.$e->getFile()
-                .': <b>'.$e->getMessage();die;
-            return $return_array=set_error_stack(28,$errorMsg);
-        }
-
-
-        if ($result == TRUE) {
-
-            switch (strtoupper($words[0])) {
-                case "INSERT" :
-                    $result_array['last_insert_id'] = $this->connection->lastInsertId();
-                    break;
-                case "DELETE" :
-                    $result_array['affected_rows'] = $stmt->rowCount();
-                    break;
-                case "UPDATE" :
-                    $result_array['affected_rows'] = $stmt->rowCount();
-                    break;
-                case "SELECT" :
-                    if (!empty($result)) {
-                        $result_array['result'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                        $result_array['count'] = $stmt->rowCount();;
-                    } else {
-                        $result_array['count'] = 0; // empty result
-                    }
-                    break;
-            }
-
-            $return_array=set_error_stack(-1,"Query Executed Successfuly",$result_array);
-        } else {
-
-            $return_array=set_error_stack(2);
-        }
-        return $return_array;
+        return false;
     }
 
     /**
@@ -288,6 +219,86 @@ class DB
 
     }
 
+    /**
+     * this function used to bind query parameters
+     * @param $values
+     * @return bool|string
+     */
+    function get_type_for_bind_param($values)
+    {
+        $type_string = "";
+        foreach ($values as $element) {
+            if (is_array($element)) {
+                return false;
+            } else if (is_string($element)) {
+                $type_string .= "s";
+            } else if (is_int($element)) {
+                $type_string .= "i";
+            } else if (is_double($element)) {
+                $type_string .= "d";
+            } else if (is_object($element)) {
+                return false;
+            }
+        }
+        return $type_string;
+    }
+
+    /**
+     * function used to run query on database object
+     * @param $query
+     * @param array $parameters
+     * @return array
+     */
+    public function query($query, array $parameters = array())
+    {
+        $return_array = array();
+        $result_array = array();
+        $words = str_word_count($query, 1);
+        try {
+            $stmt = $this->connection->prepare($query);
+
+            if (!empty($parameters)) {
+                $result = $stmt->execute($parameters);
+            } else {
+                $result = $stmt->execute($parameters);
+            }
+        } catch (PDOException $e) {
+            echo $errorMsg = 'Error on line ' . $e->getLine() . ' in ' . $e->getFile()
+                . ': <b>' . $e->getMessage();
+            die;
+            return $return_array = set_error_stack(28, $errorMsg);
+        }
+
+
+        if ($result == TRUE) {
+
+            switch (strtoupper($words[0])) {
+                case "INSERT" :
+                    $result_array['last_insert_id'] = $this->connection->lastInsertId();
+                    break;
+                case "DELETE" :
+                    $result_array['affected_rows'] = $stmt->rowCount();
+                    break;
+                case "UPDATE" :
+                    $result_array['affected_rows'] = $stmt->rowCount();
+                    break;
+                case "SELECT" :
+                    if (!empty($result)) {
+                        $result_array['result'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        $result_array['count'] = $stmt->rowCount();;
+                    } else {
+                        $result_array['count'] = 0; // empty result
+                    }
+                    break;
+            }
+
+            $return_array = set_error_stack(-1, "Query Executed Successfuly", $result_array);
+        } else {
+
+            $return_array = set_error_stack(2);
+        }
+        return $return_array;
+    }
 
     /**
      * this function used to insert data in database
@@ -341,7 +352,7 @@ class DB
             unset($parameters1[0]);
             $parameters1 = array_values($parameters1);
 
-            $parameters2=array();
+            $parameters2 = array();
 
             $query .= " WHERE ";
             if (is_array($where)) {
@@ -360,7 +371,7 @@ class DB
             }
 
 
-            $parameters=array_merge($parameters1,$parameters2);
+            $parameters = array_merge($parameters1, $parameters2);
 
             return $this->query($query, $parameters);
 
@@ -407,30 +418,6 @@ class DB
     }
 
     /**
-     * this function used to bind query parameters
-     * @param $values
-     * @return bool|string
-     */
-    function get_type_for_bind_param($values)
-    {
-        $type_string = "";
-        foreach ($values as $element) {
-            if (is_array($element)) {
-                return false;
-            } else if (is_string($element)) {
-                $type_string .= "s";
-            } else if (is_int($element)) {
-                $type_string .= "i";
-            } else if (is_double($element)) {
-                $type_string .= "d";
-            } else if (is_object($element)) {
-                return false;
-            }
-        }
-        return $type_string;
-    }
-
-    /**
      * start transaction
      * @return mixed
      */
@@ -463,6 +450,15 @@ class DB
     public function __destruct()
     {
         $this->connection = "";
+    }
+
+    /**
+     * this magic method don't allow object cloning
+     * @return bool
+     */
+    private function __clone()
+    {
+        return false;
     }
 
 }

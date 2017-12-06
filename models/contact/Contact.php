@@ -67,20 +67,20 @@ class Contact
         }
     }
 
-    function getAllContact($user_id,$name="")
-    {if($name!="")
+    function getAllContact($user_id, $name = "")
     {
-        $query="SELECT * FROM contacts where first_name LIKE '%$name%' OR last_name LIKE '%$name%' AND user_id=$user_id AND email_address!='{$_SESSION['userEmail']}'";
-    }else{
-        $query="SELECT * FROM contacts where user_id=$user_id AND email_address!='{$_SESSION['userEmail']}'";
-    }
+        if ($name != "") {
+            $query = "SELECT * FROM contacts where first_name LIKE '%$name%' OR last_name LIKE '%$name%' AND user_id=$user_id AND email_address!='{$_SESSION['userEmail']}'";
+        } else {
+            $query = "SELECT * FROM contacts where user_id=$user_id AND email_address!='{$_SESSION['userEmail']}'";
+        }
 
         return $this->connection->query($query);
     }
 
     function getContactDetailsByEmail($email)
     {
-        $query="SELECT * FROM contacts where email_address='{$email}'";
+        $query = "SELECT * FROM contacts where email_address='{$email}'";
         return $this->connection->query($query);
     }
 
@@ -118,9 +118,8 @@ class Contact
             "last_name" => $lastname,
             "moblie_number" => $mobileno,
         );
-        if($file_name!="")
-        {
-            $adminArr["photo_path"]=$file_name;
+        if ($file_name != "") {
+            $adminArr["photo_path"] = $file_name;
         }
         return $this->connection->update("contacts", $adminArr, array("id" => "{$contact_id}"));
     }
@@ -173,7 +172,7 @@ class Contact
         }
 
         global $docRoot;
-        if ($_FILES["{$fileId}"]["name"]!="") {
+        if ($_FILES["{$fileId}"]["name"] != "") {
             $file_tmp_name = $_FILES["tmp_name"];
             $file_Size = $_FILES["size"];
             $file_name = $_FILES["name"];
@@ -237,7 +236,7 @@ class Contact
             }
         }
 
-        if ($_FILES["{$fileId}"]["name"]!="") {
+        if ($_FILES["{$fileId}"]["name"] != "") {
             if (move_uploaded_file($_FILES["{$fileId}"]["tmp_name"], $target_file)) {
             } else {
                 $msg = "Sorry, there was an error uploading your file.Please try again";

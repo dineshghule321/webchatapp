@@ -1,11 +1,4 @@
 <?php
-
-/**
- * Created by PhpStorm.
- * User: dinesh
- * Date: 7/9/17
- * Time: 11:53 AM
- */
 class Pagination
 {
     /**

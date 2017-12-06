@@ -1,17 +1,15 @@
 <?php
-if(!isset($_SESSION))
-{
+if (!isset($_SESSION)) {
     session_start();
 }
 
 require_once "../layout/header.php";
 require_once "../../helpers/session.php"; //check session
 
-if(isset($_SESSION['signupError']))
-{
-    $error=$_SESSION['signupError']['errMsg'];
-}else{
-    $error="";
+if (isset($_SESSION['signupError'])) {
+    $error = $_SESSION['signupError']['errMsg'];
+} else {
+    $error = "";
 }
 ?>
 <div id="customError" class="centerDivErr"></div>
@@ -53,11 +51,10 @@ if(isset($_SESSION['signupError']))
 </div>
 <script>
 
-    $( document ).ready(function() {
+    $(document).ready(function () {
         $('#customError').html('');
-        var err="<?= $error; ?>";
-        if(err!="")
-        {
+        var err = "<?= $error; ?>";
+        if (err != "") {
             $('#customError').html(bsAlert('danger', err));
         }
 
@@ -68,13 +65,11 @@ if(isset($_SESSION['signupError']))
         var password = $("#password").val();
         var cpassword = $("#cpassword").val();
 
-        if (emailAddress!="" && password!="" && cpassword!="") {
+        if (emailAddress != "" && password != "" && cpassword != "") {
 
-            if(password!=cpassword)
-            {
+            if (password != cpassword) {
                 $('#customError').html(bsAlert('danger', 'Password and Confirm password mismatch.'));
-            }else
-            {
+            } else {
                 $("#signupFormId").submit();
             }
 
@@ -84,14 +79,12 @@ if(isset($_SESSION['signupError']))
 
     });
 
-    function showError(error)
-    {
+    function showError(error) {
         $("#printError").html(error);
         $("#err_signup_response").show();
     }
 
-    function hideError()
-    {
+    function hideError() {
         $("#printError").html('');
         $("#err_signup_response").hide();
     }

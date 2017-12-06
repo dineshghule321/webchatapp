@@ -10,14 +10,15 @@
  */
 function cleanQuery($string)
 {
-    $string=htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+    $string = htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
     $string = trim($string);
     $string = addslashes($string);
     return $string;
 }
+
 function NOWTime()
 {
-    return date ("Y-m-d H:i:s", time());
+    return date("Y-m-d H:i:s", time());
 }
 
 /**
@@ -26,7 +27,7 @@ function NOWTime()
  * @param $format
  * @return false|string
  */
-function uDateTime($format,$date)
+function uDateTime($format, $date)
 {
 
 
@@ -37,7 +38,7 @@ function uDateTime($format,$date)
     if ($date == "") {
         $date = date($format);
     }
-    $timezone=$_SESSION["timezone"];
+    $timezone = $_SESSION["timezone"];
 
     if ($timezone == "") {
         $timezone = "UTC";
@@ -56,11 +57,12 @@ function uDateTime($format,$date)
 }
 
 
-function getUTCTime($format,$TimeStr)
+function getUTCTime($format, $TimeStr)
 {
-    $TimeZoneNameFrom=$_SESSION["timezone"];
-    $TimeZoneNameTo="UTC";
-    return $bet_start_date=date_create($TimeStr, new DateTimeZone($TimeZoneNameFrom))
+    $TimeZoneNameFrom = $_SESSION["timezone"];
+    $TimeZoneNameTo = "UTC";
+    return $bet_start_date = date_create($TimeStr, new DateTimeZone($TimeZoneNameFrom))
         ->setTimezone(new DateTimeZone($TimeZoneNameTo))->format($format);
 }
+
 ?>

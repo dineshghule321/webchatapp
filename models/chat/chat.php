@@ -206,6 +206,51 @@ class chat
         }
     }
 
+    function metaOutput($output, $from_user_id, $touserImagePath, $fullName)
+    {
+        global $rootUrl, $docRoot;
+
+        $imageExtn = array('jpg', 'png', 'jpeg', 'gif');
+        $docExtn = array('pdf', 'doc', 'docx');
+
+        foreach ($output as $key => $value) {
+            $meta = explode(",", $value['meta']);// meta 0=from ,meta 1=to
+            $currentDateTime = $value['time'];
+            $from = $value['from_user_id'];
+            $file = $value['shared_file'];
+            $msg = $value['msg'];
+            $newDateTime = uDateTime('d-m-Y h:i A', $currentDateTime);
+
+            if ($file != "") {
+                $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                $sharedFile = $file;
+
+                if (in_array($ext, $imageExtn)) {
+                    $sharedFile = $rootUrl . "assets/sysImg/sharedFiles/{$file}";
+                    if ($meta[0] == $from_user_id) {
+                        $this->metaZeroImage($currentDateTime, $sharedFile, $msg, $newDateTime);
+                    } else {
+                        $this->metaOneImage($currentDateTime, $sharedFile, $msg, $newDateTime, $touserImagePath, $fullName);
+                    }
+                } else if (in_array($ext, $docExtn)) {
+                    if ($meta[0] == $from_user_id) {
+                        $this->metaZeroDoc($currentDateTime, $sharedFile, $msg, $newDateTime, $ext);
+                    } else {
+                        $this->metaOneDoc($currentDateTime, $sharedFile, $msg, $newDateTime, $touserImagePath, $fullName, $ext);
+                    }
+                }
+
+            } else {
+                if ($meta[0] == $from_user_id) {
+                    $this->metaZeroText($currentDateTime, $msg, $newDateTime);
+                } else {
+                    $this->metaOneText($currentDateTime, $touserImagePath, $fullName, $msg, $newDateTime);
+                }
+            }
+
+        }
+    }
+
     function metaZeroImage($currentDateTime, $sharedFile, $msg, $newDateTime)
     {
         ?>
@@ -239,6 +284,73 @@ class chat
                 <div class="chat_msg_div" id="customer_>">
                     <a data-toggle="tooltip" title="Download" href="<?= $sharedFile; ?>" download><img class="tftImage"
                                                                                                        src="<?= $sharedFile; ?>"></a>
+                    <div class=""><?= $msg; ?></div>
+                </div>
+                <div class="text-right text-grayscale-80 chat-time">
+                    <span class=""> <?= $newDateTime; ?> </span>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
+    function metaZeroDoc($currentDateTime, $sharedFile, $msg, $newDateTime, $ext)
+    {
+        global $rootUrl;
+
+        $downloadLink = "{$rootUrl}controllers/chat/downloadDoc.php?file=$sharedFile";
+        ?>
+        <div class="p-y-10 chat-right clearfix myMsg endMsg pr10" id="<?php echo base64_encode($currentDateTime); ?>">
+            <div class="p-10 arrow_box right-arrow bg-lightGray pull-right border-radius-10  wrd-wrp_brk-wrd">
+                <div class="chat_msg_div" id="agent_">
+                    <a data-toggle="tooltip" title="Download" href="<?= $downloadLink; ?>" target="_self">
+                        <?php
+                        $docext = array('doc', 'docx');
+                        if (in_array($ext, $docext)) {
+                            echo "<i class='fa fa-file-word-o' aria-hidden='true'></i>";
+                        } else {
+                            echo "<i class='fa fa-file-pdf-o pdfc' aria-hidden='true'></i>";
+                        }
+                        ?>
+
+                    </a>
+                    <div class=""><?= $msg; ?></div>
+                </div>
+                <div class="text-right text-grayscale-80 chat-time">
+                    <span class=""> <?= $newDateTime; ?> </span>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
+    function metaOneDoc($currentDateTime, $sharedFile, $msg, $newDateTime, $touserImagePath, $fullName, $ext)
+    {
+        global $rootUrl;
+        ?>
+        <div class="p-y-10 chat-left clearfix oppositeMsg endMsg pr10"
+             id="<?php echo base64_encode($currentDateTime); ?>">
+            <div class="row" style="margin-left: 21px;">
+                <img class="circle imageDim" src="<?= $rootUrl . "assets/images/" . $touserImagePath; ?>"> <span
+                        class="f-sz-20"><?= $fullName; ?></span>
+            </div>
+            <div style='margin-left: 40px'
+                 class="p-10 arrow_box left-arrow bg-lightGray pull-left border-radius-10  wrd-wrp_brk-wrd">
+                <div class="chat_msg_div" id="customer_>">
+                    <?php
+                    $docext = array('doc', 'docx');
+                    if (in_array($ext, $docext)) {
+                        $downloadLink = "{$rootUrl}controllers/chat/downloadDoc.php?file=$sharedFile";
+                        echo " <a data-toggle=\"tooltip\" title=\"Download\" href=\"<?= $downloadLink; ?>\" target=\"_self\">";
+                        echo "<i class='fa fa-file-word-o' aria-hidden='true'></i>";
+                    } else {
+
+                        $downloadLink = "{$rootUrl}controllers/chat/downloadPdf.php?file=$sharedFile";
+                        echo " <a data-toggle=\"tooltip\" title=\"Download\" href=\"<?= $downloadLink; ?>\" target=\"_self\">";
+                        echo "<i class='fa fa-file-pdf-o pdfc' aria-hidden='true'></i>";
+                    }
+                    ?>
+                    </a>
                     <div class=""><?= $msg; ?></div>
                 </div>
                 <div class="text-right text-grayscale-80 chat-time">
@@ -286,120 +398,5 @@ class chat
             </div>
         </div>
         <?php
-    }
-
-    function metaZeroDoc($currentDateTime, $sharedFile, $msg, $newDateTime,$ext)
-    {
-        global $rootUrl;
-
-        $downloadLink="{$rootUrl}controllers/chat/downloadDoc.php?file=$sharedFile";
-        ?>
-        <div class="p-y-10 chat-right clearfix myMsg endMsg pr10" id="<?php echo base64_encode($currentDateTime); ?>">
-            <div class="p-10 arrow_box right-arrow bg-lightGray pull-right border-radius-10  wrd-wrp_brk-wrd">
-                <div class="chat_msg_div" id="agent_">
-                    <a data-toggle="tooltip" title="Download" href="<?= $downloadLink; ?>" target="_self">
-                        <?php
-                        $docext=array('doc','docx');
-                        if(in_array($ext,$docext))
-                        {
-                            echo "<i class='fa fa-file-word-o' aria-hidden='true'></i>";
-                        }else{
-                            echo "<i class='fa fa-file-pdf-o pdfc' aria-hidden='true'></i>";
-                        }
-                        ?>
-
-                    </a>
-                    <div class=""><?= $msg; ?></div>
-                </div>
-                <div class="text-right text-grayscale-80 chat-time">
-                    <span class=""> <?= $newDateTime; ?> </span>
-                </div>
-            </div>
-        </div>
-        <?php
-    }
-
-    function metaOneDoc($currentDateTime, $sharedFile, $msg, $newDateTime, $touserImagePath, $fullName,$ext)
-    {
-        global $rootUrl;
-        ?>
-        <div class="p-y-10 chat-left clearfix oppositeMsg endMsg pr10"
-             id="<?php echo base64_encode($currentDateTime); ?>">
-            <div class="row" style="margin-left: 21px;">
-                <img class="circle imageDim" src="<?= $rootUrl . "assets/images/" . $touserImagePath; ?>"> <span
-                        class="f-sz-20"><?= $fullName; ?></span>
-            </div>
-            <div style='margin-left: 40px'
-                 class="p-10 arrow_box left-arrow bg-lightGray pull-left border-radius-10  wrd-wrp_brk-wrd">
-                <div class="chat_msg_div" id="customer_>">
-                        <?php
-                        $docext=array('doc','docx');
-                        if(in_array($ext,$docext))
-                        {
-                            $downloadLink="{$rootUrl}controllers/chat/downloadDoc.php?file=$sharedFile";
-                            echo " <a data-toggle=\"tooltip\" title=\"Download\" href=\"<?= $downloadLink; ?>\" target=\"_self\">";
-                            echo "<i class='fa fa-file-word-o' aria-hidden='true'></i>";
-                        }else{
-
-                            $downloadLink="{$rootUrl}controllers/chat/downloadPdf.php?file=$sharedFile";
-                            echo " <a data-toggle=\"tooltip\" title=\"Download\" href=\"<?= $downloadLink; ?>\" target=\"_self\">";
-                            echo "<i class='fa fa-file-pdf-o pdfc' aria-hidden='true'></i>";
-                        }
-                        ?>
-                    </a>
-                    <div class=""><?= $msg; ?></div>
-                </div>
-                <div class="text-right text-grayscale-80 chat-time">
-                    <span class=""> <?= $newDateTime; ?> </span>
-                </div>
-            </div>
-        </div>
-        <?php
-    }
-
-    function metaOutput($output, $from_user_id, $touserImagePath, $fullName)
-    {
-        global $rootUrl,$docRoot;
-
-        $imageExtn=array('jpg','png','jpeg','gif');
-        $docExtn=array('pdf','doc','docx');
-
-        foreach ($output as $key => $value) {
-            $meta = explode(",", $value['meta']);// meta 0=from ,meta 1=to
-            $currentDateTime = $value['time'];
-            $from = $value['from_user_id'];
-            $file = $value['shared_file'];
-            $msg = $value['msg'];
-            $newDateTime = uDateTime('d-m-Y h:i A', $currentDateTime);
-
-            if ($file != "") {
-                $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-                $sharedFile = $file;
-
-                if(in_array($ext,$imageExtn))
-                {
-                    $sharedFile =$rootUrl."assets/sysImg/sharedFiles/{$file}";
-                    if ($meta[0] == $from_user_id) {
-                        $this->metaZeroImage($currentDateTime, $sharedFile, $msg, $newDateTime);
-                    } else {
-                        $this->metaOneImage($currentDateTime, $sharedFile, $msg, $newDateTime, $touserImagePath, $fullName);
-                    }
-                }else if(in_array($ext,$docExtn)){
-                    if ($meta[0] == $from_user_id) {
-                        $this->metaZeroDoc($currentDateTime, $sharedFile, $msg, $newDateTime,$ext);
-                    } else {
-                        $this->metaOneDoc($currentDateTime, $sharedFile, $msg, $newDateTime, $touserImagePath, $fullName,$ext);
-                    }
-                }
-
-            } else {
-                if ($meta[0] == $from_user_id) {
-                    $this->metaZeroText($currentDateTime, $msg, $newDateTime);
-                } else {
-                    $this->metaOneText($currentDateTime, $touserImagePath, $fullName, $msg, $newDateTime);
-                }
-            }
-
-        }
     }
 }
