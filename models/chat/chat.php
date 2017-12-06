@@ -298,22 +298,23 @@ class chat
     {
         global $rootUrl;
 
-        $downloadLink = "{$rootUrl}controllers/chat/downloadDoc.php?file=$sharedFile";
         ?>
         <div class="p-y-10 chat-right clearfix myMsg endMsg pr10" id="<?php echo base64_encode($currentDateTime); ?>">
             <div class="p-10 arrow_box right-arrow bg-lightGray pull-right border-radius-10  wrd-wrp_brk-wrd">
                 <div class="chat_msg_div" id="agent_">
-                    <a data-toggle="tooltip" title="Download" href="<?= $downloadLink; ?>" target="_self">
-                        <?php
-                        $docext = array('doc', 'docx');
-                        if (in_array($ext, $docext)) {
-                            echo "<i class='fa fa-file-word-o' aria-hidden='true'></i>";
-                        } else {
-                            echo "<i class='fa fa-file-pdf-o pdfc' aria-hidden='true'></i>";
-                        }
-                        ?>
+                    <?php
+                    $docext = array('doc', 'docx');
+                    if (in_array($ext, $docext)) {
+                        $downloadLink = "{$rootUrl}controllers/chat/downloadDoc.php?file=$sharedFile";
+                        echo " <a data-toggle='tooltip' title='Download' href='".$downloadLink."' target='_self'>";
+                        echo "<i class='fa fa-file-word-o' aria-hidden='true'></i></a>";
+                    } else {
 
-                    </a>
+                        $downloadLink = "{$rootUrl}controllers/chat/downloadPdf.php?file=$sharedFile";
+                        echo " <a data-toggle='tooltip' title='Download' href='".$downloadLink."' target='_self'>";
+                        echo "<i class='fa fa-file-pdf-o pdfc' aria-hidden='true'></i></a>";
+                    }
+                    ?>
                     <div class=""><?= $msg; ?></div>
                 </div>
                 <div class="text-right text-grayscale-80 chat-time">
@@ -341,16 +342,16 @@ class chat
                     $docext = array('doc', 'docx');
                     if (in_array($ext, $docext)) {
                         $downloadLink = "{$rootUrl}controllers/chat/downloadDoc.php?file=$sharedFile";
-                        echo " <a data-toggle=\"tooltip\" title=\"Download\" href=\"<?= $downloadLink; ?>\" target=\"_self\">";
-                        echo "<i class='fa fa-file-word-o' aria-hidden='true'></i>";
+                        echo " <a data-toggle='tooltip' title='Download' href='".$downloadLink."' target='_self'>";
+                        echo "<i class='fa fa-file-word-o' aria-hidden='true'></i></a>";
                     } else {
 
                         $downloadLink = "{$rootUrl}controllers/chat/downloadPdf.php?file=$sharedFile";
-                        echo " <a data-toggle=\"tooltip\" title=\"Download\" href=\"<?= $downloadLink; ?>\" target=\"_self\">";
-                        echo "<i class='fa fa-file-pdf-o pdfc' aria-hidden='true'></i>";
+                        echo " <a data-toggle='tooltip' title='Download' href='".$downloadLink."' target='_self'>";
+                        echo "<i class='fa fa-file-pdf-o pdfc' aria-hidden='true'></i></a>";
                     }
                     ?>
-                    </a>
+
                     <div class=""><?= $msg; ?></div>
                 </div>
                 <div class="text-right text-grayscale-80 chat-time">
