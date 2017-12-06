@@ -4,7 +4,7 @@ if (!isset($_SESSION)) {
 }
 header('Content-Type: text/html; charset=utf-8');
 $docrootpath = __DIR__;
-$docrootpath = explode('\webchatapp', $docrootpath);
+$docrootpath = explode('/webchatapp', $docrootpath);
 $docrootpath = $docrootpath[0] . "/webchatapp/";
 
 require_once("{$docrootpath}config/config.php");
