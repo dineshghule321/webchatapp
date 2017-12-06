@@ -6,6 +6,10 @@
     background: #ff5900;
     color: #ffffff;
 }
+
+.mainColor{
+    color: #ff5900;
+}
 .m-0
 {
     margin-right:0px !important;
@@ -338,4 +342,14 @@ blockquote.pull-right .small:after {
     background: #ff5900;
     border-bottom-left-radius: 2rem;
     border-top-left-radius: 2rem;
+}
+
+.tftImage
+{
+    height:252px;
+    width:252px;
+}
+.interaction span:hover
+{
+
 }

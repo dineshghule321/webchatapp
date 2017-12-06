@@ -59,11 +59,11 @@ if(!empty($_GET) && $_SESSION['userLogin']=="1")
                     </div>
                     <p class="lastSeen"><?= $lastSeen; ?></p>
                 </div>
-                <div class="col-lg-3 pull-right">
+                <div class="col-lg-3 pull-right interaction">
                     <h4>
-                        <span class="fa fa-phone listMenuColor listMenuChat"></span>
-                        <span class="fa fa-video-camera listMenuColor listMenuChat"></span>
-                        <span class="fa fa-ellipsis-h listMenuColor"></span>
+                        <span class="point fa fa-phone listMenuColor listMenuChat"></span>
+                        <span class="point fa fa-video-camera listMenuColor listMenuChat"></span>
+                        <span class="point fa fa-ellipsis-h listMenuColor"></span>
                     </h4>
                 </div>
             </div>
@@ -82,10 +82,10 @@ if(!empty($_GET) && $_SESSION['userLogin']=="1")
         <div class="row chatFooter">
             <div class="col-lg-12">
                 <h4>
-                    <span class="fa fa-paperclip listMenuColor listMenuChat"></span>
-                    <span class="fa fa-picture-o listMenuColor listMenuChat"></span>
-                    <span class="fa fa-microphone listMenuColor listMenuChat"></span>
-                    <span class="fa fa-ellipsis-h listMenuColor"></span>
+                    <span class="point fa fa-paperclip listMenuColor listMenuChat"></span>
+                    <span class="point fa fa-picture-o listMenuColor listMenuChat" data-toggle="modal" data-target="#sendAttachmentModalImage"></span>
+                    <span class="point fa fa-microphone listMenuColor listMenuChat"></span>
+                    <span class="point fa fa-ellipsis-h listMenuColor"></span>
                 </h4>
             </div>
         </div>

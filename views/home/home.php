@@ -63,7 +63,7 @@ require_once "../layout/checkSession.php";
             <form class="form-horizontal" name="frm_add_new_contact" id="frm_add_new_contact" enctype="multipart/form-data" method="POST">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Add New Contact</h4>
+                <h4 class="modal-title mainColor">Add New Contact</h4>
             </div>
             <div class="modal-body">
 
@@ -125,7 +125,7 @@ require_once "../layout/checkSession.php";
             <form class="form-horizontal" name="frm_edit_contact" id="frm_edit_contact" enctype="multipart/form-data" method="POST">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Edit Contact</h4>
+                    <h4 class="modal-title mainColor">Edit Contact</h4>
                 </div>
                 <div class="modal-body">
 

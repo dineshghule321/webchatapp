@@ -56,44 +56,7 @@ if (!empty($_SESSION) && $_SESSION['userLogin']=="1") {
                 $result = $chat->getMsgById($from_user_id,$to_user_id,$lastMsgID);
                 $output=$result["data"]['result'];
 
-                foreach ($output as $key => $value) {
-                    $meta = explode(",",$value['meta']);// meta 0=from ,meta 1=to
-                    $currentDateTime = $value['time'];
-                    $from = $value['from_user_id'];
-                    $newDateTime = uDateTime('d-m-Y h:i A', $currentDateTime);
-
-                    if ($meta[0] == $from_user_id) {
-                        ?>
-                        <div class="p-y-10 chat-right clearfix myMsg endMsg pr10" id="<?php echo base64_encode($currentDateTime); ?>">
-                            <div class="p-10 arrow_box right-arrow bg-lightGray pull-right border-radius-10  wrd-wrp_brk-wrd">
-                                <div class="chat_msg_div" id="agent_">
-                                    <?= $value['msg']; ?>
-                                </div>
-                                <div class="text-right text-grayscale-80 chat-time">
-                                    <span class=""> <?= $newDateTime; ?> </span>
-                                </div>
-                            </div>
-                        </div>
-                        <?php
-                    }else{
-                        ?>
-                        <div class="p-y-10 chat-left clearfix oppositeMsg endMsg pr10" id="<?php echo base64_encode($currentDateTime); ?>">
-                            <div class="row" style="margin-left: 21px;">
-                                <img class="circle imageDim" src="<?= $rootUrl."assets/images/".$touserImagePath; ?>"> <span class="f-sz-20"><?= $fullName; ?></span>
-                            </div>
-                            <div style='margin-left: 40px'
-                                 class="p-10 arrow_box left-arrow bg-lightGray pull-left border-radius-10  wrd-wrp_brk-wrd">
-                                <div class="chat_msg_div" id="customer_>">
-                                    <?= $value['msg']; ?>
-                                </div>
-                                <div class="text-right text-grayscale-80 chat-time">
-                                    <span class=""> <?= $newDateTime; ?> </span>
-                                </div>
-                            </div>
-                        </div>
-                        <?php
-                    }
-                }
+                $chat->metaOutput($output, $from_user_id, $touserImagePath, $fullName);
                 break;
 
             case "initialLoad":
@@ -101,47 +64,7 @@ if (!empty($_SESSION) && $_SESSION['userLogin']=="1") {
                 $result = $chat->getAllMsg($from_user_id,$to_user_id);
                 $output=$result["data"]['result'];
 
-                foreach ($output as $key => $value) {
-                    $meta = explode(",",$value['meta']);// meta 0=from ,meta 1=to
-                    $currentDateTime = $value['time'];
-                    $from = $value['from_user_id'];
-                    $newDateTime = uDateTime('d-m-Y h:i A', $currentDateTime);
-
-                    if ($meta[0] == $from_user_id) {
-
-                        ?>
-                        <div class="p-y-10 chat-right clearfix myMsg endMsg pr10" id="<?php echo base64_encode($currentDateTime); ?>">
-                            <div class="p-10 arrow_box right-arrow bg-lightGray pull-right border-radius-10  wrd-wrp_brk-wrd">
-                                <div class="chat_msg_div" id="agent_">
-                                    <?= $value['msg']; ?>
-                                </div>
-                                <div class="text-right text-grayscale-80 chat-time">
-                                    <span class=""> <?= $newDateTime; ?> </span>
-                                </div>
-                            </div>
-                        </div>
-                        <?php
-                    }else{
-                        ?>
-                        <div class="p-y-10 chat-left clearfix oppositeMsg endMsg pr10" id="<?php echo base64_encode($currentDateTime); ?>">
-
-                                <div class="row" style="margin-left: 21px;">
-                                    <img class="circle imageDim" src="<?= $rootUrl."assets/images/".$touserImagePath; ?>"> <span class="f-sz-20"><?= $fullName; ?></span>
-                                </div>
-
-                            <div style='margin-left: 40px'
-                                 class="p-10 arrow_box left-arrow bg-lightGray pull-left border-radius-10  wrd-wrp_brk-wrd">
-                                <div class="chat_msg_div" id="customer_>">
-                                    <?= $value['msg']; ?>
-                                </div>
-                                <div class="text-right text-grayscale-80 chat-time">
-                                    <span class=""> <?= $newDateTime; ?> </span>
-                                </div>
-                            </div>
-                        </div>
-                        <?php
-                    }
-                }
+                $chat->metaOutput($output, $from_user_id, $touserImagePath, $fullName);
                 break;
         }
     } else {

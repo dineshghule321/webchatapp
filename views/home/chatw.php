@@ -23,7 +23,7 @@ $fromUserID=$_SESSION['userId'];
     <div class="col-lg-4">
         <div id="custom-search-input">
             <div class="input-group col-md-12">
-                <input type="text" class="  search-query form-control" name='search-query' id='search-query' placeholder="Search" />
+                <input type="text" class="  search-query form-control" name='search-query' id='search-query' placeholder="Search Contact" />
                 <span class="input-group-btn">
                                     <button class="btn colorMainBtn" type="button" onclick="getUserList()">
                                         <span class="">Search</span>
@@ -44,6 +44,47 @@ $fromUserID=$_SESSION['userId'];
     <div class="col-lg-7 chat-container bg-light-purple" id="userMessage">
 
 
+    </div>
+
+    <div class="modal fade" role="dialog" id="sendAttachmentModalImage">
+        <div class="modal-dialog" style="width:40%">
+            <div class="modal-content">
+                <form class="form-horizontal" name="frm_add_new_file_image" id="frm_add_new_file_image" enctype="multipart/form-data" method="POST">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title mainColor">Send Image File</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label for="photo_path" class="col-lg-2 control-label">Attach File</label>
+                            <div class="col-lg-10">
+                                <input type="file" class="form-control" name="file_path" id="file_path" >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="photo_path" class="col-lg-2 control-label">Description</label>
+                            <div class="col-lg-10">
+                                <textarea rows='3' cols='5' class="form-control" id="description" name="description"></textarea>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group has-error">
+                            <div class="col-lg-10 pull-right">
+                                <span id="err_frmSubmit_response_file_im" class="help-block"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" id="submit_frm_add_new_file_im" class="btn colorMainBtn">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -154,7 +195,9 @@ $fromUserID=$_SESSION['userId'];
             var userType = "me";
 
         var touserId=$("#toUserIdInput").val();
-        var fromUserId="<?= $fromUserID; ?>";
+        console.log("to:"+touserId);
+        if(touserId!=undefined) {
+            var fromUserId = "<?= $fromUserID; ?>";
 
             $.ajax({
                 type: "POST",
@@ -167,20 +210,20 @@ $fromUserID=$_SESSION['userId'];
                     fromUserId: fromUserId,
                     operation: 'checkNewMessages'
                 },
-                beforeSend: function() {
+                beforeSend: function () {
 
                 },
-                success: function(data) {
+                success: function (data) {
                     if (data) {
-                       /* var todayDate = todayDateData();
-                        var dateId = $('#chatComments').find('#' + todayDate).length;
-                        if (dateId == 1) {
-                            var response = $('<div />').html(data);
-                            var responseDiv = response.find('#' + todayDate);
-                            $(responseDiv).remove();
-                        } else {
-                            var response = data;
-                        }*/
+                        /* var todayDate = todayDateData();
+                         var dateId = $('#chatComments').find('#' + todayDate).length;
+                         if (dateId == 1) {
+                             var response = $('<div />').html(data);
+                             var responseDiv = response.find('#' + todayDate);
+                             $(responseDiv).remove();
+                         } else {
+                             var response = data;
+                         }*/
                         var response = data;
                         $("#chatComments").append(response);
 
@@ -190,10 +233,11 @@ $fromUserID=$_SESSION['userId'];
                         console.log("error to fetch updated messages");
                     }
                 },
-                error: function() {
+                error: function () {
                     console.log("fail");
                 }
             });
+        }
     }
     setInterval(updateChatWindow, <?= $chatRefreshTime; ?>); //chek new msgs
 
@@ -232,6 +276,50 @@ $fromUserID=$_SESSION['userId'];
         });
 
     }
+
+    function sendImage()
+    {
+        var touserId=$("#toUserIdInput").val();
+        var fromUserId="<?= $fromUserID; ?>";
+
+        $("#err_frmSubmit_response_file_im").html("");
+
+        var formData = new FormData($('#frm_add_new_file_image')[0]);
+        formData.append('touserId',touserId);
+        formData.append('fromUserId',fromUserId);
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "../../controllers/chat/sendImage.php",
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function(){
+            },
+            complete: function(){
+            },
+            success: function (data) {
+
+                if(data["errCode"]!="-1")
+                {
+
+                    $("#err_frmSubmit_response_file_im").html(data["errMsg"]);
+                }else if(data["errCode"]=="-1")
+                {
+                    document.getElementById("frm_add_new_file_image").reset();
+                    $("#sendAttachmentModalImage").modal('hide');
+                    updateChatWindow();
+                }
+            },
+            error: function () {
+                console.log("fail");
+            }
+        });
+    }
+
+    $("#submit_frm_add_new_file_im").click(function() {
+        sendImage();
+    });
 
     /************************************************ chat ***********************************************************/
 </script>
