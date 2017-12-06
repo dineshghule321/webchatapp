@@ -82,7 +82,7 @@ if(!empty($_GET) && $_SESSION['userLogin']=="1")
         <div class="row chatFooter">
             <div class="col-lg-12">
                 <h4>
-                    <span class="point fa fa-paperclip listMenuColor listMenuChat"></span>
+                    <span class="point fa fa-paperclip listMenuColor listMenuChat" data-toggle="modal" data-target="#sendAttachmentModalDoc"></span>
                     <span class="point fa fa-picture-o listMenuColor listMenuChat" data-toggle="modal" data-target="#sendAttachmentModalImage"></span>
                     <span class="point fa fa-microphone listMenuColor listMenuChat"></span>
                     <span class="point fa fa-ellipsis-h listMenuColor"></span>

@@ -86,6 +86,47 @@ $fromUserID=$_SESSION['userId'];
             </div>
         </div>
     </div>
+
+    <div class="modal fade" role="dialog" id="sendAttachmentModalDoc">
+        <div class="modal-dialog" style="width:40%">
+            <div class="modal-content">
+                <form class="form-horizontal" name="frm_add_new_file_doc" id="frm_add_new_file_doc" enctype="multipart/form-data" method="POST">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title mainColor">Send Document</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label for="photo_path" class="col-lg-2 control-label">Attach File</label>
+                            <div class="col-lg-10">
+                                <input type="file" class="form-control" name="file_path" id="file_path" >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="photo_path" class="col-lg-2 control-label">Description</label>
+                            <div class="col-lg-10">
+                                <textarea rows='3' cols='5' class="form-control" id="description" name="description"></textarea>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group has-error">
+                            <div class="col-lg-10 pull-right">
+                                <span id="err_frmSubmit_response_file_doc" class="help-block"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" id="submit_frm_add_new_file_doc" class="btn colorMainBtn">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -139,6 +180,7 @@ $fromUserID=$_SESSION['userId'];
 
     function loadChat(fromUser,toUser)
     {
+        $("#userMessage").html('');
         $("#userMessage").load('../../controllers/chat/oneToOneChat.php?fromUser='+fromUser+'&toUser='+toUser);
         initialLoad(toUser);
 
@@ -319,6 +361,51 @@ $fromUserID=$_SESSION['userId'];
 
     $("#submit_frm_add_new_file_im").click(function() {
         sendImage();
+    });
+
+
+    function sendDocument()
+    {
+        var touserId=$("#toUserIdInput").val();
+        var fromUserId="<?= $fromUserID; ?>";
+
+        $("#err_frmSubmit_response_file_doc").html("");
+
+        var formData = new FormData($('#frm_add_new_file_doc')[0]);
+        formData.append('touserId',touserId);
+        formData.append('fromUserId',fromUserId);
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "../../controllers/chat/sendDoc.php",
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function(){
+            },
+            complete: function(){
+            },
+            success: function (data) {
+
+                if(data["errCode"]!="-1")
+                {
+
+                    $("#err_frmSubmit_response_file_doc").html(data["errMsg"]);
+                }else if(data["errCode"]=="-1")
+                {
+                    document.getElementById("frm_add_new_file_doc").reset();
+                    $("#sendAttachmentModalDoc").modal('hide');
+                    updateChatWindow();
+                }
+            },
+            error: function () {
+                console.log("fail");
+            }
+        });
+    }
+
+    $("#submit_frm_add_new_file_doc").click(function() {
+        sendDocument();
     });
 
     /************************************************ chat ***********************************************************/
