@@ -27,7 +27,6 @@ contact_book ---root_directory
 	----views
 
 Note: 
-
 1]config/config.php 
 		
 		file contains global configuration parameters.
