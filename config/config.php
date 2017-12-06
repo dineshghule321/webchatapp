@@ -1,8 +1,8 @@
 <?php
 
-$rootUrl = "http://localhost/chatApp/"; //Server ROOT URL
+$rootUrl = "http://localhost/webchatapp/"; //Server ROOT URL
 
-$docRoot = $_SERVER['DOCUMENT_ROOT'] . "/chatApp/"; //Document ROOT of server
+$docRoot = $_SERVER['DOCUMENT_ROOT'] . "/webchatapp/"; //Document ROOT of server
 
 if($_SERVER['DOCUMENT_ROOT']=="")
 {

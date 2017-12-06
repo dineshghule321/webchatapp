@@ -1,7 +1,7 @@
 <?php
 $docrootpath = __DIR__;
-$docrootpath = explode('\chatApp', $docrootpath);
-$docrootpath = $docrootpath[0] . "/chatApp/";
+$docrootpath = explode('\webchatapp', $docrootpath);
+$docrootpath = $docrootpath[0] . "/webchatapp/";
 
 require_once("{$docrootpath}config/config.php");
 if(empty($_SESSION))
