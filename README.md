@@ -6,13 +6,13 @@ Project Url: http://localhost/webchatapp/views/user/login.php
 
 Download Zip file OR clone github link in your server HTML directory.
 
-Github Link :
+Github Link :https://github.com/dineshghule321/webchatapp
 
 *copy database file from root folder I have added as webchat import in your local database;
 
 Directory Structure:
 
-contact_book ---root_directory
+webchatapp ---root_directory
 	|
 	----asset
 	|
