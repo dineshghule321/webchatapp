@@ -95,14 +95,6 @@ if ($_SESSION["userEmail"] != "") {
                 $lname = cleanQuery($_POST["edit_last_name"]);
                 $moblie_number = cleanQuery($_POST["edit_moblie_number"]);
 
-                /*   $exist=$User->isContactUSerExists($email,$user_id)['data']['result']['0']['email_address'];
-                   if ($exist==$email) {
-                       $returnArr["errCode"] = "1";
-                       $returnArr["errMsg"] = "This contact already added in your list.";
-                       echo json_encode($returnArr, true);
-                       exit;
-                   }*/
-
                 if ($_FILES["edit_photo_path"]["name"] != "") {
                     $file_ext = strtolower(end(explode('.', $_FILES["edit_photo_path"]['name'])));
                     $file_name = strtotime(date("d-m-y h:i:s a")) . "." . $file_ext;

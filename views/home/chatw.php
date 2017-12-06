@@ -6,7 +6,14 @@ require_once "../layout/checkSession.php";
 require_once("../../models/user/User.php");
 $User = new User();
 $data = $User->isUSerExists($_SESSION["userEmail"]);
-$imagePath = $rootUrl . "assets/sysImg/profile/" . $data['data']['result'][0]['profile_pic_path'];
+$path=$data['data']['result'][0]['profile_pic_path'];
+if($path!="")
+{
+    $imagePath = $rootUrl . "assets/sysImg/profile/" . $path;
+}else{
+    $imagePath = $rootUrl . "assets/sysImg/profile/user-dummy-pic.png";
+}
+
 $fromUserID = $_SESSION['userId'];
 ?>
 <div class="row m-b-0">
@@ -335,17 +342,9 @@ $fromUserID = $_SESSION['userId'];
 
                 },
                 success: function (data) {
-                    if (data) {
-                        /* var todayDate = todayDateData();
-                         var dateId = $('#chatComments').find('#' + todayDate).length;
-                         if (dateId == 1) {
-                             var response = $('<div />').html(data);
-                             var responseDiv = response.find('#' + todayDate);
-                             $(responseDiv).remove();
-                         } else {
-                             var response = data;
-                         }*/
-                        var response = data;
+                    var filteredData=data.trim();
+                    if (filteredData) {
+                        var response = filteredData;
                         $("#chatComments").append(response);
 
                         var elem = document.getElementById('chatComments');

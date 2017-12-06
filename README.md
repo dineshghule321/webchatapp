@@ -1,5 +1,5 @@
 
-Project Name :Contact Book
+Project Name :Chat Book
 Project Url: http://localhost/webchatapp/views/user/login.php
 
 *************************************** start config *********************************************
@@ -61,10 +61,50 @@ Note:
 Enter following URL in browser:
 Project Url: http://localhost/webchatapp/views/user/login.php
 
-Put email as : dineshghule321@gmail.com
+----------------------------------------------------------------------------------
+Test App Using Below Data :
+
+User at one end:
+Put email as for login : dineshghule321@gmail.com
 Password :11111111
 
-system login done.
+User at other end:
+Put email as for login : vikas@grr.la
+Password :vikas
+----------------------------------------------------------------------------------
+App Features:
+
+I have already added 3 contacts in each user list.
+
+1] User Need to Signup with email and password
+
+  For password encryption I have used sha1 and md5 dual encryption with added salt
+
+2] Then User can Login to to his account
+
+3] To start chat user first need to add contacts in his contact list
+    1] User can add contact
+    2] User can delete his contacts
+    3] User can edit his contacts
+    4] User can search contact by name and mobile number
+    
+    User can add new contacts to his account.
+    But while adding contact to list that contact should be registered over the
+    Chat App first then and only then we can add contact to our contact list.
+    
+4] On chat window user will get his contact list at left side and chat data at 
+    right side
+    1] on left window user can search contact by email
+    2] By click on contact chat data related to that contact will displayed at right side
+    3] on chat window user can see user last active status and online offline status
+    4] in chat user can send text ,Images ,document (pdf,docx)
+    
+ 5] Used color code #ff5900 for most design in app
+ 
+ 6] also from navigation bar user can change his profile picture
+ 
+ 7] added autoscroll for chat window and contact window
+
 *************************************** run system ***********************************************
 
 
