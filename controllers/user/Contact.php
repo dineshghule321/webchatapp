@@ -60,6 +60,10 @@ if ($_SESSION["userEmail"] != "") {
                     $file_name = strtotime(date("d-m-y h:i:s a")) . "." . $file_ext;
                 }else{
                     $file_name="";
+                    $file_name = strtotime(date("d-m-y h:i:s a")) . ".png";
+                    $srcfile="{$docRoot}assets/sysImg/user-dummy-pic.png";
+                    $dstfile="{$docRoot}assets/images/{$file_name}";
+                    copy($srcfile, $dstfile);
                 }
 
                 $Contact->commonValidations($email, $fname, $lname, $moblie_number,"photo_path");

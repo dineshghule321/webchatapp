@@ -49,7 +49,7 @@ require_once("{$docrootpath}config/config.php");
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Chat Book</a>
+            <a class="navbar-brand" href="<?= $rootUrl; ?>">Chat Book</a>
         </div>
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
