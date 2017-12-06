@@ -35,6 +35,16 @@ if (!empty($_POST)) {
         }
     }
 
+    if(strlen($password)<6)
+    {
+        $returnArr["errCode"] = "1";
+        $returnArr["errMsg"] = "Please should be greater than six character.";
+
+        $_SESSION["signupError"] = $returnArr;
+        header("location:{$rootUrl}views/user/signup.php");
+        exit;
+    }
+
     $exist = $UserObject->isUSerExists($emailAddress)['data']['result']['0']['email_address'];
     if ($exist == $emailAddress) {
         $returnArr["errCode"] = "1";
