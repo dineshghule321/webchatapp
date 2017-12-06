@@ -20,7 +20,7 @@ class DB
      * @var array
      */
     private $dbSystem = array(
-        "db_name" => "contact_book",
+        "db_name" => "webchat",
         "db_user" => "root",
         "db_password" => "",
         "db_port" => "3306"

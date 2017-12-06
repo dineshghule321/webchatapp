@@ -1,6 +1,6 @@
 
 Project Name :Contact Book
-Project Url: http://localhost/contact_book/views/user/login.php
+Project Url: http://localhost/webchatapp/views/user/login.php
 
 *************************************** start config *********************************************
 
@@ -8,7 +8,7 @@ Download Zip file OR clone github link in your server HTML directory.
 
 Github Link :
 
-*copy database file from root folder I have added as contact_book import in your local database;
+*copy database file from root folder I have added as webchat import in your local database;
 
 Directory Structure:
 
@@ -45,24 +45,24 @@ Note:
     * put DB credentails in array given for system.
 
 	  private $dbSystem = array(
-        "db_name" => "contact_book",
-        "db_user" => "dbuser",
-        "db_password" => "dbuser@123",
+        "db_name" => "webchat",
+        "db_user" => "root",
+        "db_password" => "",
         "db_port" => "3306"
     );
 
-    *db user name is :dbuser
-    *db password is :dbuser@123
+    *db user name is :root
+    *db password is :
     *db_port is :3306
 
 *************************************** start config *********************************************
 
 *************************************** run system ***********************************************
 Enter following URL in browser:
-Project Url: http://localhost/contact_book/views/user/login.php
+Project Url: http://localhost/webchatapp/views/user/login.php
 
 Put email as : dineshghule321@gmail.com
-Password :dineshghule
+Password :11111111
 
 system login done.
 *************************************** run system ***********************************************
