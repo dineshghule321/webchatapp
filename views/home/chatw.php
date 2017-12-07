@@ -17,7 +17,7 @@ if($path!="")
 $fromUserID = $_SESSION['userId'];
 ?>
 <div class="row m-b-0">
-    <div class="col-lg-1">
+    <div class=" col-lg-1 col-md-1 col-sm-1">
         <ul class="sidebar white-text primary list-group flex-column m-b-0">
             <li class="text-center p-y-3">
                 <img onclick="changeProfilePic()" class="frtybyImage circle point" src="<?= $imagePath; ?>">
@@ -39,7 +39,7 @@ $fromUserID = $_SESSION['userId'];
 
     <div id="liContainer">
         <div id="mchatBox" class="boxContainer">
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-md-4 col-sm-4">
                 <div id="custom-search-input">
                     <div class="input-group col-md-12">
                         <input type="text" class="  search-query form-control" name='search-query' id='search-query'
@@ -61,7 +61,7 @@ $fromUserID = $_SESSION['userId'];
                    class="btn--add circle primary  text-center white-text f-sz-20 depth-1 pull-right m-y-1">+</a>
                 <div></div>
             </div>
-            <div class="col-lg-7 chat-container bg-light-purple" id="userMessage">
+            <div class="col-lg-7 col-md-7 col-sm-7 chat-container bg-light-purple" id="userMessage">
 
 
             </div>
