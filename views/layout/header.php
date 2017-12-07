@@ -35,8 +35,12 @@ require_once("{$docrootpath}config/config.php");
             });
         }
 
-        var validateSession = setInterval(session_checking, <?php echo $checkSession; ?>); // microsecond of 600 second=600000
-
+       var login="<?php echo $_SESSION["userLogin"]; ?>";
+        console.log(login);
+        if(login==1)
+        {
+            var validateSession = setInterval(session_checking, <?php echo $checkSession; ?>); // microsecond of 600 second=600000
+        }
     </script>
 </head>
 <body>
